@@ -20,6 +20,21 @@ while( cap1.isOpened() ):
 	ret1 , frame1 = cap1.read()
 	ret2 , frame2 = cap2.read()
 
+
+	# Convert camera feeds to grayscale
+	cap1_gray = cv2.cvtColor( frame1 , cv2.COLOR_BGR2GRAY );
+	cap2_gray = cv2.cvtColor( frame2 , cv2.COLOR_BGR2GRAY );
+
+
+	# Gaussian blur on the 
+	cap1_blur = cv2.GaussianBlur( cap1_gray , ( 5 , 5 ) , 0 )
+	cap2_blur = cv2.GaussianBlur( cap2_gray , ( 5 , 5 ) , 0 )
+
+
+	# Otsu thresholding both feeds
+	cap1_ret1 , cap1_threshold = cv2.threshold( cap1_blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
+	cap2_ret1 , cap2_threshold = cv2.threshold( cap2_blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
+
 	# Our operations on the frame come here
 	# gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
 	# blur = cv2.GaussianBlur( gray , ( 5 , 5 ) , 0)
@@ -33,11 +48,11 @@ while( cap1.isOpened() ):
     
     # Displays the first camera feed
 	cv2.namedWindow( 'frame1' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame1' , frame1 )
+	cv2.imshow( 'frame1' , cap1_threshold )
     
     # Displays the second camera feed
 	cv2.namedWindow( 'frame2' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame2' , frame2 ) 
+	cv2.imshow( 'frame2' , cap2_threshold ) 
 	if cv2.waitKey( 1 ) & 0xFF == ord( 'q' ):
 		break
 
