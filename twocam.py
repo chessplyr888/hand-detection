@@ -1,8 +1,19 @@
 import numpy as np
 import cv2
 
+width = 640;
+height = 480;
+
 cap1 = cv2.VideoCapture( 0 )
 cap2 = cv2.VideoCapture( 1 )
+
+
+# Set camera resolutions to 640 * 480
+cap1.set( 3 , width )
+cap1.set( 4 , height )
+cap2.set( 3 , width )
+cap2.set( 4 , hgith ) 
+
 
 while( cap1.isOpened() ):
 	# Capture frame-by-frame
