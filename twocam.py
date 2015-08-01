@@ -35,24 +35,24 @@ while( cap1.isOpened() ):
 	cap1_ret1 , cap1_threshold = cv2.threshold( cap1_blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
 	cap2_ret1 , cap2_threshold = cv2.threshold( cap2_blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
 
-	# Our operations on the frame come here
-	# gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
-	# blur = cv2.GaussianBlur( gray , ( 5 , 5 ) , 0)
-	# ret1 , thresholdImage = cv2.threshold( blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
 
-	# thresholdImage = cv2.adaptiveThreshold( blur, 255 , cv2.ADAPTIVE_THRESH_GAUSSIAN_C , cv2.THRESH_BINARY , 11 , 2)
- 
-	# print thresholdImage
+	# Identify contours
+	__ , cap1_contours , cap1_hierarchy = cv2.findContours( cap1_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
+	__ , cap2_contours , cap2_hirearchy = cv2.findContours( cap2_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
 
-	# Display the resulting frame
-    
-    # Displays the first camera feed
+
+	# Draw the contours on frame
+	cv2.drawContours( frame1 , cap1_contours , -1 , ( 0 , 255 , 0) , 3 )
+	cv2.drawContours( frame2 , cap2_contours , -1 , ( 0 , 255 , 0) , 3 )
+	
+	
+	# Displays the first camera feed
 	cv2.namedWindow( 'frame1' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame1' , cap1_threshold )
-    
-    # Displays the second camera feed
+	cv2.imshow( 'frame1' , frame1 )
+	
+	# Displays the second camera feed
 	cv2.namedWindow( 'frame2' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame2' , cap2_threshold ) 
+	cv2.imshow( 'frame2' , frame2 ) 
 	if cv2.waitKey( 1 ) & 0xFF == ord( 'q' ):
 		break
 
