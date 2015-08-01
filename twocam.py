@@ -12,7 +12,7 @@ cap2 = cv2.VideoCapture( 1 )
 cap1.set( 3 , width )
 cap1.set( 4 , height )
 cap2.set( 3 , width )
-cap2.set( 4 , hgith ) 
+cap2.set( 4 , height ) 
 
 
 while( cap1.isOpened() ):
