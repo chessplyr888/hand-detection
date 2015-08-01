@@ -37,7 +37,7 @@ while( cap1.isOpened() ):
     
     # Displays the second camera feed
 	cv2.namedWindow( 'frame2' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame2' , frame2 ) //shows frame
+	cv2.imshow( 'frame2' , frame2 ) 
 	if cv2.waitKey( 1 ) & 0xFF == ord( 'q' ):
 		break
 
