@@ -19,10 +19,14 @@ while( cap1.isOpened() ):
 	# print thresholdImage
 
 	# Display the resulting frame
+    
+    # Displays the first camera feed
 	cv2.namedWindow( 'frame1' , cv2.WINDOW_NORMAL )
 	cv2.imshow( 'frame1' , frame1 )
+    
+    # Displays the second camera feed
 	cv2.namedWindow( 'frame2' , cv2.WINDOW_NORMAL )
-	cv2.imshow( 'frame2' , frame2 )
+	cv2.imshow( 'frame2' , frame2 ) //shows frame
 	if cv2.waitKey( 1 ) & 0xFF == ord( 'q' ):
 		break
 
