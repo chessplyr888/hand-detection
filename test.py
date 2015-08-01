@@ -11,6 +11,7 @@ while( cap.isOpened() ):
 	gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
 	blur = cv2.GaussianBlur( gray , ( 5 , 5 ) , 0)
 	ret1 , thresholdImage = cv2.threshold( blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
+	# ret1 , thresholdImage = cv2.threshold( blur , 70 , 255 , cv2.THRESH_BINARY )
 
 	# thresholdImage = cv2.adaptiveThreshold( blur, 255 , cv2.ADAPTIVE_THRESH_GAUSSIAN_C , cv2.THRESH_BINARY , 11 , 2)
  
