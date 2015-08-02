@@ -128,7 +128,7 @@ def checkDuplicates( newPoint , points ):
 	for i in points:
 		dist = getDistance( newPoint , i )
 		# Set arbitrary distance to be 10 px
-		if ( dist < 10 ):
+		if ( dist < 8 ):
 			return True
 	return False
 
@@ -201,7 +201,7 @@ while( cap.isOpened() ):
 	# frame = deepcopy( frame )
 
 	# Set an arbitrary region of interest which happened to be an solid color
-	frame = frame[ 25:200 , 0:300 ]
+	# frame = frame[ 25:200 , 0:300 ]
 
 	# Our operations on the frame come here
 	gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
