@@ -44,7 +44,7 @@ def checkDuplicates( newPoint , points ):
 	for i in points:
 		dist = getDistance( newPoint , i )
 		# Set arbitrary distance to be 10 px
-		if ( dist < 10 ):
+		if ( dist < 30 ):
 			return True
 	return False
 

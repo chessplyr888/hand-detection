@@ -17,6 +17,35 @@ def getIndexOfLongestContour( contours ):
 	return maxIndex
 
 
+def getIndexofContourWithMostDefects( contours ):
+	maxCount = 0
+	maxIndex = 0
+	for i in range( 0 , len( contours ) ):
+		countGoodDefects = 0
+		cnt = contours[i]
+		hull = cv2.convexHull( cnt , returnPoints = False )
+		defects = cv2.convexityDefects( cnt , hull )
+
+		# print defects
+		if defects is not None:
+			# print "hi"
+			for j in range( defects.shape[0] ):
+				s , e , f , d = defects[j , 0]
+				start = tuple( cnt[s][0] )
+				end = tuple( cnt[e][0] )
+				far = tuple( cnt[f][0] )
+				angle = getAngle( start , far , end )
+				if angle < 80:
+					countGoodDefects = countGoodDefects + 1
+
+		if countGoodDefects > maxCount:
+			maxCount = countGoodDefects
+			maxIndex = i
+
+	# print maxIndex
+	return maxIndex
+
+
 def getDistance( point1 , point2 ):
 	dist = ( ( point2[0] - point1[0] ) ** 2 + ( point2[1] - point1[1] ) ** 2 ) ** 0.5
 	return dist
@@ -110,11 +139,11 @@ while( cap.isOpened() ):
 	ret, frame = cap.read()
 
 	# Set an arbitrary region of interest which happened to be an solid color
-	frame = frame[ 25:200 , 0:300 ]
+	# frame = frame[ 25:200 , 0:300 ]
 
 	# Our operations on the frame come here
 	gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
-	blur = cv2.GaussianBlur( gray , ( 5 , 5 ) , 0)
+	blur = cv2.GaussianBlur( gray , ( 9 , 9 ) , 0)
 	ret1 , thresholdImage = cv2.threshold( blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
 
 
@@ -123,7 +152,7 @@ while( cap.isOpened() ):
 	image, contours, heirarchy = cv2.findContours( thresholdImage , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
 
 
-	maxIndex = getIndexOfLongestContour( contours )
+	maxIndex = getIndexofContourWithMostDefects( contours )
 	cnt = contours[maxIndex]
 
 
@@ -136,6 +165,7 @@ while( cap.isOpened() ):
 	# print defects
 
 	goodDefects = []
+	farpoints = []
 	for i in range( defects.shape[0] ):
 		s , e , f , d = defects[i , 0]
 		start = tuple( cnt[s][0] )
@@ -158,9 +188,19 @@ while( cap.isOpened() ):
 			if duplicateStart is False:
 				cv2.circle( frame , start , 5 , [0 , 0 , 255] , -1 )
 				goodDefects.append( start )
+				if far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480:
+					farpoints.append( far )
 			if duplicateEnd is False:
 				cv2.circle( frame , end , 5 , [0 , 0 , 255] , -1 )
 				goodDefects.append( end )
+				if far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480:
+					farpoints.append( far )
+
+	( x , y ) , radius = cv2.minEnclosingCircle( np.array( goodDefects ) )
+	center = ( int( x ) , int( y ) )
+	radius = int( radius )
+
+	cv2.circle( frame , center , radius , [0 , 0 , 0] , 2)
 
 
 	# Display the resulting frame
