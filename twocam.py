@@ -79,9 +79,9 @@ while( cap1.isOpened() ):
 	# Draw defects for camera 1
 	for i in range( cap1_defects.shape[0] ):
 		s , e , f , d = cap1_defects[1 , 0]
-		cap1_start = tuple( cnt[s][0] )
-		cap1_end = tuple( cnt[e][0] )
-		cap1_far = tuple( cnt[f][0] )
+		cap1_start = tuple( cap1_cnt[s][0] )
+		cap1_end = tuple( cap1_cnt[e][0] )
+		cap1_far = tuple( cap1_cnt[f][0] )
 
 		cv2.line( frame1 , cap1_start , cap1_end , ( 0 , 255 , 0 ) , 2 )
 		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) , -1 )
@@ -90,9 +90,9 @@ while( cap1.isOpened() ):
 	# Draw defects for camera 2
 	for i in range( cap2_defects.shape[0] ):
 		s , e , f , d = cap2_defects[1 , 0]
-		cap2_start = tuple( cnt[s][0] )
-		cap2_end = tuple( cnt[e][0] )
-		cap2_far = tuple( cnt[f][0] )
+		cap2_start = tuple( cap2_cnt[s][0] )
+		cap2_end = tuple( cap2_cnt[e][0] )
+		cap2_far = tuple( cap2_cnt[f][0] )
 
 		cv2.line( frame1 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
 		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) , -1 )
