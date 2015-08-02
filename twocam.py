@@ -100,8 +100,8 @@ while( cap1.isOpened() and cap2.isOpened() ):
 		cap2_end = tuple( cap2_cnt[e][0] )
 		cap2_far = tuple( cap2_cnt[f][0] )
 
-		cv2.line( frame1 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 , cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
+		cv2.line( frame2 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
+		cv2.circle( frame2 , cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
 		print "hi"
 	
 	
@@ -116,6 +116,7 @@ while( cap1.isOpened() and cap2.isOpened() ):
 		break
 
 # When everything done, release the capture
-cap.release()
+cap1.release()
+cap2.release()
 cv2.destroyAllWindows()
 
