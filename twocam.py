@@ -84,7 +84,7 @@ while( cap1.isOpened() ):
 		cap1_far = tuple( cap1_cnt[f][0] )
 
 		cv2.line( frame1 , cap1_start , cap1_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) , -1 )
+		cv2.circle( frame1 . cap1_far , 5, ( 0 , 0 , 255 ) , -1 )
 
 
 	# Draw defects for camera 2
@@ -95,7 +95,7 @@ while( cap1.isOpened() ):
 		cap2_far = tuple( cap2_cnt[f][0] )
 
 		cv2.line( frame1 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) , -1 )
+		cv2.circle( frame1 . cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
 	
 	
 	# Displays the first camera feed
