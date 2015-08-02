@@ -43,6 +43,65 @@ def checkDuplicates( newPoint , points ):
 			return True
 	return False
 
+def vectorFromPoints( point1 , point2 ):
+	vector = []
+	dx = point2[0] - point1[0]
+	dy = point2[1] - point1[1]
+	vector.append( dx )
+	vector.append( dy )
+	return vector
+
+def linearCombination( vector1 , vector2 , point ):
+	constants = []
+
+	a11 = vector1[0]
+	a12 = vector2[0]
+	a13 = point[0]
+	a21 = vector1[1]
+	a22 = vector2[1]
+	a23 = point[1]
+
+	a = [[a11 , a12 , a13] , [a21 , a22 , a23]]
+
+	a = [[a11 / vector1[0] , a12 / vector1[0] , a13 / vector1[0]] , [a21 / vector1[1] , a22 / vector1[1] , a13 / vector1[1]]]
+
+	a = [[a11 , a12 , a13] , [a21 - a11 , a22 - a12 , a23 - a13]]
+
+	temp = a22
+
+	a = [[a11 , a12 , a13] , [a21 / temp , a22 / temp , a23 / temp]]
+
+	temp = a21
+
+	a = [[a11 - temp * a21 , a21 - temp * a22 , a31 - temp * a23] , [a21 , a22 , a23]]
+
+	constants.push( a[0][2] )
+	constants.push( a[1][2] )
+
+	return constants
+
+
+
+def setTopLeft( point ):
+	point_topLeft = point
+
+def setTopRight( point ):
+	point_topRight = point
+
+def setBotRight( point ):
+	point_botRight = point
+
+def setBotLeft( point ):
+	point_botLeft - point
+
+
+
+point_topLeft = None 
+point_topRight = None
+point_botRight = None
+point_botLeft = None
+
+
 
 cap = cv2.VideoCapture(0)
 
@@ -61,7 +120,7 @@ while( cap.isOpened() ):
 
 	binThresh = deepcopy( thresholdImage )
 
-	image, contours, heirarchy = cv2.findContours( thresholdImage , cv2.RETR_TREE , cv2.CHAIN_APPROX_NONE )
+	image, contours, heirarchy = cv2.findContours( thresholdImage , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
 
 
 	maxIndex = getIndexOfLongestContour( contours )

@@ -35,6 +35,7 @@ def getAngle( point1 , point2 , point3 ):
 	angle = angle * 180 / math.pi
 	return angle
 
+
 def checkDuplicates( newPoint , points ):
 	# print ""
 	# print points
@@ -46,6 +47,76 @@ def checkDuplicates( newPoint , points ):
 		if ( dist < 10 ):
 			return True
 	return False
+
+
+def vectorFromPoints( point1 , point2 ):
+	vector = []
+	dx = point2[0] - point1[0]
+	dy = point2[1] - point1[1]
+	vector.append( dx )
+	vector.append( dy )
+	return vector
+
+
+def linearCombination( vector1 , vector2 , point ):
+	constants = []
+
+	a11 = vector1[0]
+	a12 = vector2[0]
+	a13 = point[0]
+	a21 = vector1[1]
+	a22 = vector2[1]
+	a23 = point[1]
+
+	a = [[a11 , a12 , a13] , [a21 , a22 , a23]]
+
+	a = [[a11 / vector1[0] , a12 / vector1[0] , a13 / vector1[0]] , [a21 / vector1[1] , a22 / vector1[1] , a13 / vector1[1]]]
+
+	a = [[a11 , a12 , a13] , [a21 - a11 , a22 - a12 , a23 - a13]]
+
+	temp = a22
+
+	a = [[a11 , a12 , a13] , [a21 / temp , a22 / temp , a23 / temp]]
+
+	temp = a21
+
+	a = [[a11 - temp * a21 , a21 - temp * a22 , a31 - temp * a23] , [a21 , a22 , a23]]
+
+	constants.push( a[0][2] )
+	constants.push( a[1][2] )
+
+	return constants
+
+
+def setTopLeft( cap1_point , cap2_point ):
+	cap1_topLeft = cap1_point
+	cap2_topLeft = cap2_point
+
+def setTopRight( cap1_point , cap2_point ):
+	cap1_topRight = cap1_point
+	cap2_topRight = cap2_point
+
+def setBotRight( cap1_point , cap2_point ):
+	cap1_botRight = cap1_point
+	cap2_botRight = cap2_point
+	
+def setBotLeft( cap1_point , cap2_point ):
+	cap1_botLeft = cap1_point
+	cap2_botLeft = cap2_point
+
+
+
+cap1_topLeft = None
+cap1_topRight = None
+cap1_topRight = None
+cap1_botLeft = None
+
+cap2_topLeft = None
+cap2_topRight = None
+cap2_topRight = None
+cap2_botLeft = None
+
+
 
 
 cap1 = cv2.VideoCapture( 0 )
