@@ -1,5 +1,6 @@
 from __future__ import division
 import math
+from copy import deepcopy
 import numpy as np
 import cv2
 
@@ -30,7 +31,17 @@ def getAngle( point1 , point2 , point3 ):
 	angle = angle * 180 / math.pi
 	return angle
 
-
+def checkDuplicates( newPoint , points ):
+	# print ""
+	# print points
+	# print newPoint
+	# print ""
+	for i in points:
+		dist = getDistance( newPoint , i )
+		# Set arbitrary distance to be 10 px
+		if ( dist < 10 ):
+			return True
+	return False
 
 
 cap = cv2.VideoCapture(0)
@@ -47,6 +58,9 @@ while( cap.isOpened() ):
 	blur = cv2.GaussianBlur( gray , ( 5 , 5 ) , 0)
 	ret1 , thresholdImage = cv2.threshold( blur , 0 , 255 , cv2.THRESH_BINARY + cv2.THRESH_OTSU )
 
+
+	binThresh = deepcopy( thresholdImage )
+
 	image, contours, heirarchy = cv2.findContours( thresholdImage , cv2.RETR_TREE , cv2.CHAIN_APPROX_NONE )
 
 
@@ -62,16 +76,32 @@ while( cap.isOpened() ):
 	defects = cv2.convexityDefects( cnt , hull )
 	# print defects
 
+	goodDefects = []
 	for i in range( defects.shape[0] ):
 		s , e , f , d = defects[i , 0]
 		start = tuple( cnt[s][0] )
 		end = tuple( cnt[e][0] )
 		far = tuple( cnt[f][0] )
 		angle = getAngle( start , far , end )
-		print angle
+		# print angle
+		# print goodDefects
 		if angle < 80:
 			cv2.line( frame , start , end , [0 , 255 , 0] , 2 )
-			cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
+
+			if len( goodDefects ) == 0:
+				duplicateStart = False
+				duplicateEnd = False
+			else:
+				duplicateStart = checkDuplicates( start , goodDefects )
+				duplicateEnd = checkDuplicates( end , goodDefects )
+				
+			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
+			if duplicateStart is False:
+				cv2.circle( frame , start , 5 , [0 , 0 , 255] , -1 )
+				goodDefects.append( start )
+			if duplicateEnd is False:
+				cv2.circle( frame , end , 5 , [0 , 0 , 255] , -1 )
+				goodDefects.append( end )
 
 
 	# Display the resulting frame
