@@ -21,12 +21,13 @@ def getIndexofContourWithMostDefects( contours ):
 	maxCount = 0
 	maxIndex = 0
 	for i in range( 0 , len( contours ) ):
-		countGoodDefects = 0
+		# countGoodDefects = 0
 		cnt = contours[i]
 		hull = cv2.convexHull( cnt , returnPoints = False )
 		defects = cv2.convexityDefects( cnt , hull )
 
 		# print defects
+		goodDefects = []
 		if defects is not None:
 			# print "hi"
 			for j in range( defects.shape[0] ):
@@ -36,7 +37,22 @@ def getIndexofContourWithMostDefects( contours ):
 				far = tuple( cnt[f][0] )
 				angle = getAngle( start , far , end )
 				if angle < 80:
-					countGoodDefects = countGoodDefects + 1
+					if len( goodDefects ) == 0:
+						duplicateStart = False
+						duplicateEnd = False
+					else:
+						duplicateStart = checkDuplicates( start , goodDefects )
+						duplicateEnd = checkDuplicates( end , goodDefects )
+
+					if duplicateStart is False:
+						goodDefects.append( start )
+					if duplicateEnd is False:
+						goodDefects.append( end )
+
+		if len( goodDefects ) > 0:
+			goodDefects = removeOutliers( goodDefects )
+
+		countGoodDefects = len( goodDefects )
 
 		if countGoodDefects > maxCount:
 			maxCount = countGoodDefects
@@ -44,6 +60,50 @@ def getIndexofContourWithMostDefects( contours ):
 
 	# print maxIndex
 	return maxIndex
+
+
+def getAveragePoint( points ):
+	count = len( points )
+	# print count
+	totalx = 0
+	totaly = 0
+	for i in points:
+		totalx = totalx + i[0]
+		totaly = totaly + i[1]
+
+	newX = totalx // count
+	newY = totaly // count
+
+	point = []
+	point.append( newX )
+	point.append( newY )
+
+	return point
+
+
+def removeOutliers( points ):
+	avgPoint = getAveragePoint( points )
+	dist = []
+
+	for i in points:
+		distance = getDistance( avgPoint , i )
+		dist.append( distance )
+
+
+	totalDist = 0
+	for i in dist:
+		totalDist = totalDist + i
+	avgDist = totalDist / len( dist )
+
+	multiplier = 1.75
+	newDist = avgDist * multiplier
+
+	for i in points[:]:
+		distance = getDistance( avgPoint , i )
+		if distance > newDist:
+			points.remove(i)
+
+	return points
 
 
 def getDistance( point1 , point2 ):
@@ -138,8 +198,10 @@ while( cap.isOpened() ):
 	# Capture frame-by-frame
 	ret, frame = cap.read()
 
+	# frame = deepcopy( frame )
+
 	# Set an arbitrary region of interest which happened to be an solid color
-	# frame = frame[ 25:200 , 0:300 ]
+	frame = frame[ 25:200 , 0:300 ]
 
 	# Our operations on the frame come here
 	gray = cv2.cvtColor( frame , cv2.COLOR_BGR2GRAY )
@@ -186,14 +248,14 @@ while( cap.isOpened() ):
 				
 			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
 			if duplicateStart is False:
-				cv2.circle( frame , start , 5 , [0 , 0 , 255] , -1 )
 				goodDefects.append( start )
-				if far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480:
+				if not ( far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480 ):
+					cv2.circle( frame , start , 5 , [0 , 0 , 255] , -1 )
 					farpoints.append( far )
 			if duplicateEnd is False:
-				cv2.circle( frame , end , 5 , [0 , 0 , 255] , -1 )
 				goodDefects.append( end )
-				if far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480:
+				if not( far[0] == 0 or far[0] == 640 or far[1] == 0 or far[1] == 480 ):
+					cv2.circle( frame , end , 5 , [0 , 0 , 255] , -1 )
 					farpoints.append( far )
 
 	( x , y ) , radius = cv2.minEnclosingCircle( np.array( goodDefects ) )

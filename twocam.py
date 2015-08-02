@@ -21,9 +21,39 @@ def getIndexOfLongestContour( contours ):
 	return maxIndex
 
 
+def getIndexofContourWithMostDefects( contours ):
+	maxCount = 0
+	maxIndex = 0
+	for i in range( 0 , len( contours ) ):
+		countGoodDefects = 0
+		cnt = contours[i]
+		hull = cv2.convexHull( cnt , returnPoints = False )
+		defects = cv2.convexityDefects( cnt , hull )
+
+		# print defects
+		if defects is not None:
+			# print "hi"
+			for j in range( defects.shape[0] ):
+				s , e , f , d = defects[j , 0]
+				start = tuple( cnt[s][0] )
+				end = tuple( cnt[e][0] )
+				far = tuple( cnt[f][0] )
+				angle = getAngle( start , far , end )
+				if angle < 80:
+					countGoodDefects = countGoodDefects + 1
+
+		if countGoodDefects > maxCount:
+			maxCount = countGoodDefects
+			maxIndex = i
+
+	# print maxIndex
+	return maxIndex
+
+
 def getDistance( point1 , point2 ):
 	dist = ( ( point2[0] - point1[0] ) ** 2 + ( point2[1] - point1[1] ) ** 2 ) ** 0.5
 	return dist
+
 
 def getAngle( point1 , point2 , point3 ):
 	line1 = getDistance( point2 , point1 )
