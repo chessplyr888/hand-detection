@@ -205,10 +205,10 @@ while( cap1.isOpened() and cap2.isOpened() ):
 				
 			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
 			if cap1_duplicateStart is False:
-				cv2.circle( cap1_frame , cap1_start , 5 , [0 , 0 , 255] , -1 )
+				cv2.circle( frame1 , cap1_start , 5 , [0 , 0 , 255] , -1 )
 				cap1_goodDefects.append( cap1_start )
 			if cap1_duplicateEnd is False:
-				cv2.circle( cap1_frame , cap1_end , 5 , [0 , 0 , 255] , -1 )
+				cv2.circle( frame1 , cap1_end , 5 , [0 , 0 , 255] , -1 )
 				cap1_goodDefects.append( cap1_end )
 
 
@@ -234,10 +234,10 @@ while( cap1.isOpened() and cap2.isOpened() ):
 				
 			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
 			if cap2_duplicateStart is False:
-				cv2.circle( cap2_frame , cap2_start , 5 , [0 , 0 , 255] , -1 )
+				cv2.circle( frame2 , cap2_start , 5 , [0 , 0 , 255] , -1 )
 				cap2_goodDefects.append( cap2_start )
 			if cap2_duplicateEnd is False:
-				cv2.circle( cap2_frame , cap2_end , 5 , [0 , 0 , 255] , -1 )
+				cv2.circle( frame2 , cap2_end , 5 , [0 , 0 , 255] , -1 )
 				cap2_goodDefects.append( cap2_end )
 	
 	
