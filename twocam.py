@@ -18,7 +18,6 @@ def getIndexOfLongestContour( contours ):
 	return maxIndex
 
 
-<<<<<<< HEAD
 def getDistance( point1 , point2 ):
 	dist = ( ( point2[0] - point1[0] ) ** 2 + ( point2[1] - point1[1] ) ** 2 ) ** 0.5
 	return dist
@@ -117,8 +116,6 @@ cap2_botLeft = None
 
 
 
-=======
->>>>>>> b3b87a3e2add9debca117a63d3e38e897e135e2c
 cap1 = cv2.VideoCapture( 0 )
 cap2 = cv2.VideoCapture( 1 )
 
@@ -203,7 +200,6 @@ while( cap1.isOpened() and cap2.isOpened() ):
 
 		cv2.line( frame2 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
 		cv2.circle( frame2 , cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
-		print "hi"
 	
 	
 	# Displays the first camera feed
