@@ -4,6 +4,19 @@ import cv2
 width = 640;
 height = 480;
 
+
+def getIndexOfLongestContour( contours ):
+	maxLength = 0
+	maxIndex = 0
+	for i in range( 0 , len( contours ) ):
+		length = len( contours[i] )
+		# print length
+		if length > maxLength:
+			maxLength = length
+			maxIndex = i
+	return maxIndex
+
+
 cap1 = cv2.VideoCapture( 0 )
 cap2 = cv2.VideoCapture( 1 )
 
@@ -37,13 +50,52 @@ while( cap1.isOpened() ):
 
 
 	# Identify contours
-	__ , cap1_contours , cap1_hierarchy = cv2.findContours( cap1_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
-	__ , cap2_contours , cap2_hirearchy = cv2.findContours( cap2_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
+	cap1_contours , cap1_hierarchy = cv2.findContours( cap1_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
+	cap2_contours , cap2_hirearchy = cv2.findContours( cap2_threshold , cv2.RETR_TREE , cv2.CHAIN_APPROX_SIMPLE )
 
 
-	# Draw the contours on frame
-	cv2.drawContours( frame1 , cap1_contours , -1 , ( 0 , 255 , 0) , 3 )
-	cv2.drawContours( frame2 , cap2_contours , -1 , ( 0 , 255 , 0) , 3 )
+	# Find the biggest contour
+	maxIndex1 = getIndexOfLongestContour( cap1_contours )
+	maxIndex2 = getIndexOfLongestContour( cap2_contours )
+	cap1_cnt = cap1_contours[maxIndex1]
+	cap2_cnt = cap2_contours[maxIndex2]
+
+
+	# Draw the largest contour on frame
+	cv2.drawContours( frame1 , cap1_contours , maxIndex1 , ( 0 , 255 , 0 ) , 3 )
+	cv2.drawContours( frame2 , cap2_contours , maxIndex2 , ( 0 , 255 , 0 ) , 3 )
+
+
+	# Get the convex hull
+	cap1_hull = cv2.convexHull( cap1_cnt , returnPoints = False )
+	cap2_hull = cv2.convexHull( cap2_cnt , returnPoints = False )
+
+
+	# Find the convexity defects
+	cap1_defects = cv2.convexityDefects( cap1_cnt , cap1_hull )
+	cap2_defects = cv2.convexityDefects( cap2_cnt , cap2_hull )
+
+
+	# Draw defects for camera 1
+	for i in range( cap1_defects.shape[0] ):
+		s , e , f , d = cap1_defects[1 , 0]
+		cap1_start = tuple( cnt[s][0] )
+		cap1_end = tuple( cnt[e][0] )
+		cap1_far = tuple( cnt[f][0] )
+
+		cv2.line( frame1 , cap1_start , cap1_end , ( 0 , 255 , 0 ) 2 )
+		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) -1 )
+
+
+	# Draw defects for camera 2
+	for i in range( cap2_defects.shape[0] ):
+		s , e , f , d = cap2_defects[1 , 0]
+		cap2_start = tuple( cnt[s][0] )
+		cap2_end = tuple( cnt[e][0] )
+		cap2_far = tuple( cnt[f][0] )
+
+		cv2.line( frame1 , cap2_start , cap2_end , ( 0 , 255 , 0 ) 2 )
+		cv2.circle( frame1 . far , 5, ( 0 , 0 , 255 ) -1 )
 	
 	
 	# Displays the first camera feed
