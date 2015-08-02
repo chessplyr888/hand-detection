@@ -181,25 +181,61 @@ while( cap1.isOpened() and cap2.isOpened() ):
 
 
 	# Draw defects for camera 1
+	cap1_goodDefects = []
 	for i in range( cap1_defects.shape[0] ):
 		s , e , f , d = cap1_defects[1 , 0]
 		cap1_start = tuple( cap1_cnt[s][0] )
 		cap1_end = tuple( cap1_cnt[e][0] )
 		cap1_far = tuple( cap1_cnt[f][0] )
 
-		cv2.line( frame1 , cap1_start , cap1_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 , cap1_far , 5, ( 0 , 0 , 255 ) , -1 )
+		angle = getAngle( cap1_start , cap1_far , cap1_end )
+
+		if angle < 80:
+			cv2.line( frame1 , cap1_start , cap1_end , [0 , 255 , 0] , 2 )
+
+			if len( cap1_goodDefects ) == 0:
+				cap1_duplicateStart = False
+				cap1_duplicateEnd = False
+			else:
+				cap1_duplicateStart = checkDuplicates( cap1_start , cap1_goodDefects )
+				cap1_duplicateEnd = checkDuplicates( cap1_end , cap1_goodDefects )
+				
+			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
+			if duplicateStart is False:
+				cv2.circle( cap1_frame , cap1_start , 5 , [0 , 0 , 255] , -1 )
+				cap1_goodDefects.append( cap1_start )
+			if duplicateEnd is False:
+				cv2.circle( cap1_frame , cap1_end , 5 , [0 , 0 , 255] , -1 )
+				cap1_goodDefects.append( cap1_end )
 
 
 	# Draw defects for camera 2
+	cap2_goodDefects = []
 	for i in range( cap2_defects.shape[0] ):
 		s , e , f , d = cap2_defects[1 , 0]
 		cap2_start = tuple( cap2_cnt[s][0] )
 		cap2_end = tuple( cap2_cnt[e][0] )
 		cap2_far = tuple( cap2_cnt[f][0] )
 
-		cv2.line( frame2 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame2 , cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
+		angle = getAngle( cap2_start , cap2_far , cap2_end )
+
+		if angle < 80:
+			cv2.line( frame1 , cap2_start , cap2_end , [0 , 255 , 0] , 2 )
+
+			if len( cap2_goodDefects ) == 0:
+				cap2_duplicateStart = False
+				cap2_duplicateEnd = False
+			else:
+				cap2_duplicateStart = checkDuplicates( cap2_start , cap2_goodDefects )
+				cap2_duplicateEnd = checkDuplicates( cap2_end , cap2_goodDefects )
+				
+			# cv2.circle( frame , far , 5 , [0 , 0 , 255] , -1 )
+			if duplicateStart is False:
+				cv2.circle( cap2_frame , cap2_start , 5 , [0 , 0 , 255] , -1 )
+				cap2_goodDefects.append( cap2_start )
+			if duplicateEnd is False:
+				cv2.circle( cap2_frame , cap2_end , 5 , [0 , 0 , 255] , -1 )
+				cap2_goodDefects.append( cap2_end )
 	
 	
 	# Displays the first camera feed
