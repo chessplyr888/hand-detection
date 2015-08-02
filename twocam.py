@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from time import sleep
 
 width = 640;
 height = 480;
@@ -28,11 +29,16 @@ cap2.set( 3 , width )
 cap2.set( 4 , height ) 
 
 
-while( cap1.isOpened() ):
+firstTime = True
+while( cap1.isOpened() and cap2.isOpened() ):
+	# Sleep to allow both cameras to start up
+	if firstTime:
+		firstTime = False
+		sleep(5)
+
 	# Capture frame-by-frame
 	ret1 , frame1 = cap1.read()
 	ret2 , frame2 = cap2.read()
-
 
 	# Convert camera feeds to grayscale
 	cap1_gray = cv2.cvtColor( frame1 , cv2.COLOR_BGR2GRAY );
@@ -57,6 +63,8 @@ while( cap1.isOpened() ):
 	# Find the biggest contour
 	maxIndex1 = getIndexOfLongestContour( cap1_contours )
 	maxIndex2 = getIndexOfLongestContour( cap2_contours )
+	print maxIndex1
+	print maxIndex2
 	cap1_cnt = cap1_contours[maxIndex1]
 	cap2_cnt = cap2_contours[maxIndex2]
 
@@ -84,7 +92,7 @@ while( cap1.isOpened() ):
 		cap1_far = tuple( cap1_cnt[f][0] )
 
 		cv2.line( frame1 , cap1_start , cap1_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 . cap1_far , 5, ( 0 , 0 , 255 ) , -1 )
+		cv2.circle( frame1 , cap1_far , 5, ( 0 , 0 , 255 ) , -1 )
 
 
 	# Draw defects for camera 2
@@ -95,7 +103,7 @@ while( cap1.isOpened() ):
 		cap2_far = tuple( cap2_cnt[f][0] )
 
 		cv2.line( frame1 , cap2_start , cap2_end , ( 0 , 255 , 0 ) , 2 )
-		cv2.circle( frame1 . cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
+		cv2.circle( frame1 , cap2_far , 5, ( 0 , 0 , 255 ) , -1 )
 	
 	
 	# Displays the first camera feed
