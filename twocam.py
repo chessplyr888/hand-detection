@@ -63,8 +63,6 @@ while( cap1.isOpened() and cap2.isOpened() ):
 	# Find the biggest contour
 	maxIndex1 = getIndexOfLongestContour( cap1_contours )
 	maxIndex2 = getIndexOfLongestContour( cap2_contours )
-	print maxIndex1
-	print maxIndex2
 	cap1_cnt = cap1_contours[maxIndex1]
 	cap2_cnt = cap2_contours[maxIndex2]
 
